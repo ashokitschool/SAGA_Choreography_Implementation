@@ -1,1 +1,7 @@
+in\ashokit\payment\entity\UserBalanceEntity.class
+in\ashokit\payment\repo\UserTransactionRepo.class
+in\ashokit\payment\config\PaymentConsumerConfig.class
+in\ashokit\payment\repo\UserBalanceRepo.class
 in\ashokit\payment\Application.class
+in\ashokit\payment\entity\UserTransaction.class
+in\ashokit\payment\service\PaymentService.class

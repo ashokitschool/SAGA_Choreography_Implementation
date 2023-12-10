@@ -1,16 +1,23 @@
-package in.ashokit.dto;
+package in.ashokit.payment.entity;
 
-public class PaymentRequestDto {
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
+@Entity
+public class UserTransaction {
+
+	@Id
 	private Integer orderId;
+
 	private Integer userId;
+
 	private Double amount;
 
-	public PaymentRequestDto() {
+	public UserTransaction() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PaymentRequestDto(Integer orderId, Integer userId, Double amount) {
+	public UserTransaction(Integer orderId, Integer userId, Double amount) {
 		super();
 		this.orderId = orderId;
 		this.userId = userId;
@@ -43,7 +50,7 @@ public class PaymentRequestDto {
 
 	@Override
 	public String toString() {
-		return "PaymentRequestDto [orderId=" + orderId + ", userId=" + userId + ", amount=" + amount + "]";
+		return "UserTransaction [orderId=" + orderId + ", userId=" + userId + ", amount=" + amount + "]";
 	}
 
 }
