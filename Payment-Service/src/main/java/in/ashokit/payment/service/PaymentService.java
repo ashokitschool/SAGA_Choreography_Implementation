@@ -1,20 +1,20 @@
 package in.ashokit.payment.service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import in.ashokit.dto.OrderRequestDto;
-import in.ashokit.dto.PaymentRequestDto;
 import in.ashokit.dto.PaymentStatus;
-import in.ashokit.event.OrderEvent;
-import in.ashokit.event.PaymentEvent;
-import in.ashokit.payment.entity.UserBalanceEntity;
-import in.ashokit.payment.entity.UserTransaction;
-import in.ashokit.payment.repo.UserBalanceRepo;
-import in.ashokit.payment.repo.UserTransactionRepo;
+import in.ashokit.entity.PurchaseOrder;
+import in.ashokit.entity.PurchaseOrderPayments;
+import in.ashokit.entity.UserBalanceEntity;
+import in.ashokit.repo.PurchaseOrderPaymentsRepo;
+import in.ashokit.repo.UserBalanceRepo;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
@@ -23,9 +23,13 @@ public class PaymentService {
 
 	@Autowired
 	private UserBalanceRepo userBalanceRepo;
-
+	
 	@Autowired
-	private UserTransactionRepo userTxRepo;
+	private PurchaseOrderPaymentsRepo paymentsRepo;
+	
+	@Autowired
+	private KafkaTemplate<String, Object> kafkaTemplate;
+
 
 	@PostConstruct
 	public void storeUserBalanceInfo() {
@@ -38,35 +42,29 @@ public class PaymentService {
 	}
 
 	@Transactional
-	public PaymentEvent newOrderEvent(OrderEvent orderEvent) {
-
-		OrderRequestDto orderRequestDto = orderEvent.getOrderRequestDto();
-
-		PaymentRequestDto paymentReqDto = new PaymentRequestDto(orderRequestDto.getOrderId(),
-				orderRequestDto.getUserId(), orderRequestDto.getAmount());
-
-		return userBalanceRepo.findById(orderRequestDto.getUserId())
-				.filter(ub -> ub.getAmount() > orderRequestDto.getAmount())
-				.map(ub -> {
-					ub.setAmount(ub.getAmount() - orderRequestDto.getAmount());
-					userTxRepo.save(new UserTransaction(orderRequestDto.getOrderId(), 
-							orderRequestDto.getUserId(),
-							orderRequestDto.getAmount())
-					);
-					return new PaymentEvent(paymentReqDto, PaymentStatus.PAYMENT_COMPLETED);
-				}).orElse(new PaymentEvent(paymentReqDto, PaymentStatus.PAYMENT_FAILED));
-
+	@KafkaListener(topics = "orders-topic",groupId = "ashokit-group")
+	public void handleOrderPayment(PurchaseOrder purchaseOrder) {
+		
+		Integer orderId = purchaseOrder.getOrderId();
+		
+		Integer userId = purchaseOrder.getUserId();
+		
+		userBalanceRepo.findById(userId).ifPresent(ub -> {
+			PurchaseOrderPayments payment = new PurchaseOrderPayments();
+			payment.setAmount(purchaseOrder.getPrice());
+			payment.setOrderId(orderId);
+			payment.setUserId(userId);
+			payment.setPaymentDate(LocalDate.now());
+			
+			if(ub.getAmount() > purchaseOrder.getPrice()) {
+				ub.setAmount(ub.getAmount() - purchaseOrder.getPrice());
+				payment.setPaymentStatus(PaymentStatus.PAYMENT_COMPLETED.toString());
+				userBalanceRepo.save(ub);
+			}else {
+				payment.setPaymentStatus(PaymentStatus.PAYMENT_FAILED.toString());
+			}
+			payment = paymentsRepo.save(payment);
+			kafkaTemplate.send("payments-topic", payment);
+		});
 	}
-	
-	
-	public void cancelOrderEvent(OrderEvent orderEvent) {
-		userTxRepo.findById(orderEvent.getOrderRequestDto().getOrderId())
-				  .ifPresent(ut -> {
-					  userTxRepo.delete(ut);
-					  
-					  userTxRepo.findById(ut.getUserId())
-					  			.ifPresent(ub -> ub.setAmount(ub.getAmount() + ut.getAmount()));
-				  });
-	}
-
 }

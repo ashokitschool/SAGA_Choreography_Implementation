@@ -1,22 +1,26 @@
 package in.ashokit.dto;
 
+import lombok.Data;
+
+@Data
 public class OrderRequestDto {
 
 	private Integer userId;
 	private Integer productId;
 	private Double amount;
 	private Integer orderId;
+	private String orderStatus;
 
 	public OrderRequestDto() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public OrderRequestDto(Integer userId, Integer productId, Double amount, Integer orderId) {
+	public OrderRequestDto(Integer userId, Integer productId, Double amount, Integer orderId, String orderStatus) {
 		super();
 		this.userId = userId;
 		this.productId = productId;
 		this.amount = amount;
 		this.orderId = orderId;
+		this.orderStatus = orderStatus;
 	}
 
 	public Integer getUserId() {
@@ -51,10 +55,12 @@ public class OrderRequestDto {
 		this.orderId = orderId;
 	}
 
-	@Override
-	public String toString() {
-		return "OrderRequestDto [userId=" + userId + ", productId=" + productId + ", amount=" + amount + ", orderId="
-				+ orderId + "]";
+	public String getOrderStatus() {
+		return orderStatus;
 	}
 
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	
 }

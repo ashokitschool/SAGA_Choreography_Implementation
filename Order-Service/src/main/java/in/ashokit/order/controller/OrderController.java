@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import in.ashokit.dto.OrderRequestDto;
-import in.ashokit.order.entity.PurchaseOrder;
+import in.ashokit.entity.PurchaseOrder;
 import in.ashokit.order.service.OrderService;
 
 @RestController

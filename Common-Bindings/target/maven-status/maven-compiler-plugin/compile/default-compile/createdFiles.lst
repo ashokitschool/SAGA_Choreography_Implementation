@@ -1,8 +1,13 @@
-in\ashokit\dto\PaymentRequestDto.class
-in\ashokit\event\PaymentEvent.class
 in\ashokit\dto\PaymentStatus.class
-in\ashokit\event\Event.class
-in\ashokit\event\OrderEvent.class
+in\ashokit\payment\repo\UserTransactionRepo.class
+in\ashokit\payment\repo\PurchaseOrderRepository.class
+in\ashokit\order\entity\UserBalanceEntity.class
+in\ashokit\dto\PaymentRequestDto.class
+in\ashokit\order\entity\PurchaseOrderPayments.class
+in\ashokit\payment\repo\PurchaseOrderPaymentsRepo.class
+in\ashokit\order\entity\PurchaseOrder.class
+in\ashokit\payment\repo\UserBalanceRepo.class
 in\ashokit\dto\OrderRequestDto.class
 in\ashokit\dto\OrderStatus.class
 in\ashokit\dto\OrderResponseDto.class
+in\ashokit\order\entity\UserTransaction.class

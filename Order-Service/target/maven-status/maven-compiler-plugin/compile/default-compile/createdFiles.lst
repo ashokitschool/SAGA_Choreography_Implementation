@@ -1,9 +1,5 @@
+in\ashokit\order\config\KafkaConsumerConfig.class
 in\ashokit\order\controller\OrderController.class
-in\ashokit\order\entity\PurchaseOrder.class
-in\ashokit\order\repo\OrderRepository.class
-in\ashokit\order\service\OrderStatusPublishService.class
 in\ashokit\order\Application.class
-in\ashokit\order\config\OrderStatusUpdateHandler.class
-in\ashokit\order\config\OrderPublisherConfig.class
-in\ashokit\order\config\EventConsumerConfig.class
+in\ashokit\order\config\KafkaProducerConfig.class
 in\ashokit\order\service\OrderService.class

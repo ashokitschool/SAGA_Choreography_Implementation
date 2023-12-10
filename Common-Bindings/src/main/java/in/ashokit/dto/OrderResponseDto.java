@@ -6,15 +6,12 @@ public class OrderResponseDto {
 	private Integer productId;
 	private Integer amount;
 	private Integer orderId;
-
-	private OrderStatus orderStatus;
+	private String orderStatus;
 
 	public OrderResponseDto() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public OrderResponseDto(Integer userId, Integer productId, Integer amount, Integer orderId,
-			OrderStatus orderStatus) {
+	public OrderResponseDto(Integer userId, Integer productId, Integer amount, Integer orderId, String orderStatus) {
 		super();
 		this.userId = userId;
 		this.productId = productId;
@@ -55,11 +52,11 @@ public class OrderResponseDto {
 		this.orderId = orderId;
 	}
 
-	public OrderStatus getOrderStatus() {
+	public String getOrderStatus() {
 		return orderStatus;
 	}
 
-	public void setOrderStatus(OrderStatus orderStatus) {
+	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
 
