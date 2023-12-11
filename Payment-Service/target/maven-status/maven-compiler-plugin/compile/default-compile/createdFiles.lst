@@ -1,4 +1,4 @@
+in\ashokit\Application.class
 in\ashokit\payment\config\KafkaConsumerConfig.class
-in\ashokit\payment\Application.class
 in\ashokit\payment\config\KafkaProducerConfig.class
 in\ashokit\payment\service\PaymentService.class

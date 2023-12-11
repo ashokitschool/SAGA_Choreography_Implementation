@@ -1,10 +1,6 @@
 package in.ashokit.entity;
 
-import in.ashokit.dto.OrderStatus;
-import in.ashokit.dto.PaymentStatus;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;

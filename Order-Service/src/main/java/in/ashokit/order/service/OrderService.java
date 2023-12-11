@@ -24,11 +24,16 @@ public class OrderService {
 	@Autowired
 	private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PurchaseOrder createOrder(OrderRequestDto orderRequestDto) {
+		
+		// create order in database
 		PurchaseOrder purchaseOrder = orderRepo.save(convertDtoToEntity(orderRequestDto));
+		
 		orderRequestDto.setOrderId(purchaseOrder.getOrderId());
 		orderRequestDto.setOrderStatus(OrderStatus.ORDER_CREATED.toString());
+		
+		// publish order creation msg to kafka topic
 		kafkaTemplate.send("orders-topic", purchaseOrder);
 		return purchaseOrder;
 	}
@@ -45,6 +50,8 @@ public class OrderService {
 		entity.setPrice(dto.getAmount());
 		return entity;
 	}
+	
+	// listening to payments topic to confirm/cancel order
 
 	@KafkaListener(topics = "payments-topic",groupId = "ait-group")
 	public void handleOrderStatusUpdate(PurchaseOrderPayments orderPayment) {

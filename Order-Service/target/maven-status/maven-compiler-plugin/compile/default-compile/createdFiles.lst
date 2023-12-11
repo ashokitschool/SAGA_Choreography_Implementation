@@ -1,5 +1,5 @@
+in\ashokit\Application.class
 in\ashokit\order\config\KafkaConsumerConfig.class
 in\ashokit\order\controller\OrderController.class
-in\ashokit\order\Application.class
 in\ashokit\order\config\KafkaProducerConfig.class
 in\ashokit\order\service\OrderService.class

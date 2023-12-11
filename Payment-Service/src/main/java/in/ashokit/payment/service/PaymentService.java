@@ -41,6 +41,7 @@ public class PaymentService {
 		userBalanceRepo.saveAll(asList);
 	}
 
+	// listening to orders topic
 	@Transactional
 	@KafkaListener(topics = "orders-topic",groupId = "ashokit-group")
 	public void handleOrderPayment(PurchaseOrder purchaseOrder) {
@@ -57,13 +58,18 @@ public class PaymentService {
 			payment.setPaymentDate(LocalDate.now());
 			
 			if(ub.getAmount() > purchaseOrder.getPrice()) {
+				// deduct user balance and update current bal
 				ub.setAmount(ub.getAmount() - purchaseOrder.getPrice());
 				payment.setPaymentStatus(PaymentStatus.PAYMENT_COMPLETED.toString());
 				userBalanceRepo.save(ub);
 			}else {
 				payment.setPaymentStatus(PaymentStatus.PAYMENT_FAILED.toString());
 			}
+			
+			// update payment status in db
 			payment = paymentsRepo.save(payment);
+			
+			// produce payment-status msg to payments topic
 			kafkaTemplate.send("payments-topic", payment);
 		});
 	}
